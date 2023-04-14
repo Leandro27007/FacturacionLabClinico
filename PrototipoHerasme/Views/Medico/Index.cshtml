@@ -1,0 +1,195 @@
+﻿@model PrototipoHerasme.Models.ViewModels.PacientesViewModel
+
+@{
+    ViewData["Title"] = "Medico, Paciente";
+}
+
+
+
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-md-12 mt-2">
+            <div class="card">
+
+                @if (Model != null)
+                {
+                    @if (Model.NoFactura != null)
+                    {
+                        <div class="card-body pt-4 p-3">
+
+                            <div class="col-md-8">
+
+                                <h6 class="mb-0"> <i class="fa fa-nurse"></i>Despachar Paciente </h6>
+
+                            </div>
+                            <ul class="list-group">
+
+                                <li class="list-group-item border-0 d-flex  bg-gray-100 ">
+                                    <div class="col-sm-5">
+                                        <label class="col-form-label">Nombre</label>
+                                        <input type="text" class="form-control" disabled="disabled" value="@Model.NombrePaciente">
+                                    </div>
+                                </li>
+
+
+                                <li class="list-group-item border-0 d-flex col-sm-12 bg-gray-300 ">
+                                    <div class="col-sm-2">
+                                        <label class="col-form-label">Estudios: </label>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" disabled="disabled" value="@Model.Estudio">
+                                    </div>
+                                </li>
+                                <li class="list-group-item border-0 d-flex col-sm-12 bg-gray-300 ">
+                                    <div class="col-sm-2">
+                                        <label class="col-form-label"># Factura: </label>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" disabled="disabled" value="@Model.NoFactura">
+                                    </div>
+                                </li>
+
+                            </ul>
+
+
+                            <div class="card-header pb-0 px-3 col-md-12 list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+                                <div class="col-md-8">
+                                </div>
+
+                                <div class="col-md-3 border-radius-lg">
+                                    <i class="fa fa-book"></i>Confirma  #factura
+                                    <input type="text" class="form-control" name="idFactura" placeholder="# de Factura" />
+                                </div>
+
+                            </div>
+
+
+                            <ul>
+                                <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+
+                                    <!-- BOTONES -->
+                                    <div class="d-flex align-items-center text-sm font-weight-bold">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+                                            <label class="form-check-label" for="flexSwitchCheckDefault">Resultados Pendientes?</label>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center text-sm font-weight-bold">
+
+                                        <div class="p-1">
+                                            <input onclick="CancelarJS(@Model.NoFactura)" type="button" class="btn bg-gradient-danger w-100 mt-4 mb-0" value="Cancelar">
+                                        </div>
+                                        <div class="p-3">
+                                            <input onclick="DespacharJS(@Model.NoFactura)" type="button" class="btn bg-gradient-success w-100 mt-4 mb-0" value="Despachar">
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+
+
+                        </div>
+                    }
+
+                }
+
+
+            </div>
+        </div>
+
+    </div>
+
+
+    <div>
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+    </div>
+</div>
+
+
+<script src="~/js/dashboardjs/popper.min.js"></script>
+<script src="~/js/dashboardjs/bootstrap.min.js"></script>
+<script src="~/js/dashboardjs/plugins/perfect-scrollbar.min.js"></script>
+<script src="~/js/dashboardjs/plugins/smooth-scrollbar.min.js"></script>
+
+
+<script>
+
+
+
+    function CancelarJS(idFactura) {
+
+        $.ajax({
+            type: "POST",
+            url: "/Medico/CancelarPaciente",
+            data: { idFactura: idFactura },
+            success: function (response) {
+                AlertaResultado(response);
+            },
+            error: function (request, status, error) {
+                alert('error');
+            }
+        })
+    }
+
+
+
+    function DespacharJS(idFactura) {
+
+        $.ajax({
+            type: "POST",
+            url: "/Medico/DespacharPaciente",
+            data: { idFactura: idFactura },
+            success: function (response) {
+                AlertaResultado(response);
+            },
+            error: function (request, status, error) {
+                alert('error');
+            }
+        })
+    }
+
+
+
+
+    function AlertaResultado(response) {
+        let mensaje = "";
+
+        if (response == "TrueDespachado") {
+            mensaje = "Paciente Despachado con exito";
+
+        } else if (response == "TrueCancelado") {
+            mensaje = "Cancelacion exitosa";
+
+        } else if (response == "FalseDespachado" || response == "FalseCancelado") {
+            mensaje = "Ocurrio un error, intentelo de nuevo o contacte a soporte tecnico.";
+
+        } 
+
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+        })
+
+        Toast.fire({
+            icon: 'info',
+            title: mensaje
+        })
+
+
+        if (response != 'False')
+            setTimeout(() => { window.location.href = "@Url.Content("~/Medico/")"; }, 2000);
+
+    }
+
+
+</script>

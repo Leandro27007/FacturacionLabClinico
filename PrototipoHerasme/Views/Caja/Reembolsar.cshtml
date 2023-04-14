@@ -1,0 +1,197 @@
+﻿@model PrototipoHerasme.Models.ViewModels.ReembolsoViewModel
+
+@{
+    ViewData["Title"] = "Caja, Reembolsar";
+}
+
+
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-md-12 mt-2">
+            <div class="card">
+                <form method="post" asp-action="BuscarFactura" asp-controller="Caja">
+                    <div class="card-header pb-0 px-3 col-md-12 list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+                        <div class="col-md-8">
+
+                            <h6 class="mb-0"> <i class="fa fa-box"></i>Reembolsar Venta </h6>
+
+                        </div>
+
+                        <div class="col-md-3 border-radius-lg">
+                            <i class="fa fa-search"></i>Buscar factura
+                            <input type="text" class="form-control" name="idFactura" placeholder="# de Factura" />
+                        </div>
+                        <div class="col-md-1 border-radius-lg">
+                            <br />
+                            <button class="btn  bg-gradient-success w-50 mt-0 mb-0"><i class="fa fa-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+                @if (Model != null)
+                {
+                    @if (Model.CedulaCliente != null)
+                    {
+                        <div class="card-body pt-4 p-3">
+
+
+                            <ul class="list-group">
+
+                                <li class="list-group-item border-0 d-flex  bg-gray-100 ">
+                                    <div class="col-sm-5">
+                                        <label class="col-form-label">Nombre</label>
+                                        <input type="text" class="form-control" disabled="disabled" value="@Model.NombreCompletoCliente">
+                                    </div>
+                                </li>
+
+                                <li class="list-group-item border-0 d-flex  bg-gray-100 ">
+                                    <div class="col-sm-5">
+                                        <label class="col-form-label">Telefono</label>
+                                        <input type="text" class="form-control" disabled="disabled" value="@Model.TelefonoCliente">
+                                    </div>
+                                </li>
+
+                                <li class="list-group-item border-0 d-flex  bg-gray-100 ">
+                                    <div class="col-sm-5">
+                                        <label class="col-form-label">Cedula</label>
+                                        <input type="text" class="form-control" disabled="disabled" value="@Model.CedulaCliente">
+                                    </div>
+                                </li>
+
+                                <li class="list-group-item border-0 d-flex col-sm-12 bg-gray-300 ">
+                                    <div class="col-sm-2">
+                                        <label class="col-form-label">Estudios: </label>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" disabled="disabled" value="@Model.NombreServicio">
+                                    </div>
+                                </li>
+                                <li class="list-group-item border-0 d-flex col-sm-12 bg-gray-300 ">
+                                    <div class="col-sm-2">
+                                        <label class="col-form-label">Precio: </label>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" disabled="disabled" value="@Model.PrecioServicio">
+                                    </div>
+                                </li>
+                                <li class="list-group-item border-0 d-flex col-sm-12 bg-gray-300 ">
+                                    <div class="col-sm-2">
+                                        <label class="col-form-label">Total: </label>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <input type="text" class="form-control" disabled="disabled" value="@Model.PrecioServicio">
+                                    </div>
+                                </li>
+
+                            </ul>
+
+
+
+
+                            <ul>
+                                <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+
+                                    <!-- BOTONES -->
+                                    <div class="d-flex align-items-center text-sm font-weight-bold">
+                                    </div>
+                                    <div class="d-flex align-items-center text-sm font-weight-bold">
+
+
+                                        <input onclick="ReembolsarJS(@Model.IdFactura)" type="button" class="btn bg-gradient-danger w-100 mt-4 mb-0" value="Reembolsar">
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    }
+
+                }
+
+
+            </div>
+        </div>
+
+    </div>
+
+
+    <div>
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+    </div>
+</div>
+
+
+<script src="~/js/dashboardjs/popper.min.js"></script>
+<script src="~/js/dashboardjs/bootstrap.min.js"></script>
+<script src="~/js/dashboardjs/plugins/perfect-scrollbar.min.js"></script>
+<script src="~/js/dashboardjs/plugins/smooth-scrollbar.min.js"></script>
+
+
+<script>
+
+
+
+    function ReembolsarJS(idFactura) {
+
+        $.ajax({
+            type: "POST",
+            url: "/Caja/Reembolsar",
+            data: { idFactura: idFactura },
+            success: function (response) {
+                AlertaResultadoReembolso(response);
+            },
+            error: function (request, status, error) {
+                alert('error');
+            }
+        })
+    }
+
+
+
+    function AlertaResultadoReembolso(response) {
+        let mensaje = "";
+
+        if (response == "True") {
+            mensaje = "Reembolso exitoso";
+
+        } else if (response == "False") {
+            mensaje = "No se pudo hacer el Reembolso";
+
+        }
+
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 1000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+        })
+
+        Toast.fire({
+            icon: 'info',
+            title: mensaje
+        })
+
+
+        if (response != 'False')
+            setTimeout(() => { window.location.href = "@Url.Content("~/Caja/Reembolsar")"; }, 2000);
+
+    }
+
+
+</script>
+
+

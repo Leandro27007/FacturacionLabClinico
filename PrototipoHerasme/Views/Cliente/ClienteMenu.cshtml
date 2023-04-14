@@ -1,0 +1,89 @@
+﻿
+@{
+    Layout = null;
+}
+
+@model PrototipoHerasme.Models.ViewModels.ClienteServiciosViewModel;
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+<link href="~/css/clientemenu.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<h1>Seleccione el estudio que desea realizarse</h1>
+
+<br />
+
+<div class="btn-holder">
+
+    @foreach (var item in Model.Servicios)
+    {
+
+        <button class="btn btn-1 hover-filled-opacity" onclick="SeleccionServicioJS(@item.IdServicio, '@item.NombreServicio')">
+            <span>@item.NombreServicio</span>
+        </button>
+
+    }
+
+</div>
+
+
+<script>
+
+    function SeleccionServicioJS(idServicio, NombreServicio) {
+
+        let timerInterval
+
+        Swal.fire({
+            title: 'Deseas solicitar el examen de: ' + NombreServicio,
+            timer: 10000,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            cancelButtonText: 'No, Cancelar!',
+            confirmButtonText: 'Si, solicitarlo!',
+            timerProgressBar: true,
+            didOpen: () => {
+                timerInterval = setInterval(() => {
+                }, 100)
+            },
+            willClose: () => {
+                clearInterval(timerInterval)
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: "/Cliente/GenerarTurno",
+                    type: "POST",
+                    data: { idServicio: idServicio },
+                    success: function (response) {
+
+                        MostrarTurnoJs(response);
+                    },
+                    error: function (request, status, error) {
+                        alert(request.responseText);
+                    }
+                });
+            }
+        })
+    }
+
+    function MostrarTurnoJs(response) {
+        Swal.fire(
+            {
+                icon: 'success',
+                text: 'Imprimiendo turno',
+                title: '<strong>Turno numero: <u style="color: green; text-decoration: underline;">' + response + '</u></strong>',
+                showConfirmButton: false,
+                timer: 4000
+            })
+    }
+
+
+</script>
+
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+
+

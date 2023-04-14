@@ -1,0 +1,294 @@
+﻿@model PrototipoHerasme.Models.ViewModels.VentaViewModel
+
+@{
+    ViewData["Title"] = "Caja, Facturar";
+}
+
+<div class="container-fluid py-4">
+    <form method="post" asp-action="Vender" asp-controller="Caja">
+
+        <div class="row">
+            <div class="col-md-7 mt-4">
+
+                <div class="card">
+                    <div class="card-header pb-0 px-3 col-md-12 list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+                        <div class="col-md-6">
+
+                            <h6 class="mb-0">Informacion de cliente </h6>
+
+                        </div>
+
+                        @if (@Model.Cliente.turno > 0)
+                        {
+                            <div class="col-md-5 bg-gray-200 border-radius-lg">
+                                <h6 class="mb-0">Turno Numero: #T-@Model.Cliente.turno</h6>
+                            </div>
+                        }
+
+
+                    </div>
+
+
+                    <div class="card-body pt-4 p-3  ">
+                        <ul class="list-group">
+                            <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg">
+
+
+                                <div class="col-md-7">
+
+                                    <input type="hidden" class="form-control" value="@Model.DetallesFactura.IdServicio" asp-for="DetallesFactura.IdServicio">
+                                    <input type="hidden" class="form-control" value="@Model.DetallesFactura.NombreServico" asp-for="DetallesFactura.NombreServico">
+                                    <input type="hidden" class="form-control" value="@Model.Cliente.turno" asp-for="Cliente.turno">
+
+
+                                    <label>Nombre</label>
+                                    <div class="mb-1">
+                                        <input type="text" class="form-control" asp-for="Cliente.NombreCliente" placeholder="Nombre" aria-label="Email" aria-describedby="email-addon">
+                                        <label class="text-danger">@Html.ValidationMessageFor(m => m.Cliente.NombreCliente)</label>
+
+                                    </div>
+                                    <label class="text-bold shadow-blur">Apellido</label>
+                                    <div class="mb-1">
+                                        <input type="text" class="form-control" asp-for="Cliente.ApellidoCliente" placeholder="Apellido" aria-label="Email" aria-describedby="email-addon">
+                                        <label class="text-danger">@Html.ValidationMessageFor(m => m.Cliente.ApellidoCliente)</label>
+
+                                    </div>
+                                    <label>Cedula</label>
+                                    <div class="mb-1">
+                                        <input type="text" class="form-control" asp-for="Cliente.CedulaCliente" placeholder="Cedula" aria-label="Email" aria-describedby="email-addon">
+                                        <label class="text-danger">@Html.ValidationMessageFor(m => m.Cliente.CedulaCliente)</label>
+                                    </div>
+                                    <label>Telefono</label>
+                                    <div class="mb-1">   
+                                        <input type="text" class="form-control" asp-for="Cliente.TelefonoCliente" placeholder="Telefono" aria-label="Email" aria-describedby="email-addon">
+                                        <label class="text-danger">@Html.ValidationMessageFor(m => m.Cliente.TelefonoCliente)</label>
+                                    </div>
+                                    <label>Email</label>
+                                    <div class="mb-1">
+                                        <input type="email" formnovalidate class="form-control" asp-for="Cliente.EmailCliente" placeholder="Email" aria-label="Email" aria-describedby="email-addon">
+                                        <label class="text-danger">@Html.ValidationMessageFor(m => m.Cliente.EmailCliente)</label>
+
+                                    </div>
+                                </div>
+
+
+
+                            </li>
+
+
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-md-5 mt-4">
+                <div class="card h-100 mb-4">
+                    <div class="card-header pb-0 px-3">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6 class="mb-0">Factura</h6>
+                            </div>
+                        </div>
+
+
+
+                        <div class="card-body pt-4 mt-4 p-3 bg-gray-100 border-radius-lg border-0">
+                            <h6 class="text-uppercase text-body text-xs font-weight-bolder mb-3">Servicios</h6>
+
+                            <ul class="list-group ">
+                                <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+                                    <div class="d-flex align-items-center">
+                                        <button class="btn btn-icon-only btn-rounded btn-outline-success mb-0 me-3 btn-sm d-flex align-items-center justify-content-center"><i class="fas fa-arrow-up"></i></button>
+                                        <div class="d-flex flex-column">
+                                            <h6 class="mb-1 text-dark text-sm">@Model.DetallesFactura.NombreServico</h6>
+                                            <span class="text-xs">@Model.DetallesFactura.DescripcionServicio</span>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center text-success text-gradient text-sm font-weight-bold">
+                                        $ @Model.DetallesFactura.PrecioServicio
+                                    </div>
+                                </li>
+
+
+
+                                <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 mt-10 border-radius-lg">
+                                    <div class="d-flex align-items-center text-success text-gradient text-sm font-weight-bold">
+                                    </div>
+                                    <div class="d-flex align-items-center text-sm font-weight-bold">
+                                        Descuento :
+                                        <div class="d-flex align-items-center text-success font-weight-bold text-sm">
+                                            @Model.Factura.Descuento $0
+                                        </div>
+                                    </div>
+                                </li>
+
+                                <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+
+                                    <div class="d-flex align-items-center text-success text-gradient text-sm font-weight-bold">
+                                    </div>
+                                    <div class="d-flex align-items-center text-sm font-weight-bold">
+                                        Total :
+                                        <div class="d-flex align-items-center text-success font-weight-bold text-sm">
+                                            $ @Model.DetallesFactura.PrecioServicio
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+
+                            <ul>
+                                <li class="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+
+                                    <!-- BOTONES -->
+                                    <div class="d-flex align-items-center text-sm font-weight-bold">
+                                        <button type="submit" class="btn bg-gradient-success w-100 mt-4 mb-0 ">Facturar</button>
+                                    </div>
+                                    <div class="d-flex align-items-center text-sm font-weight-bold">
+                                        <input onclick="CancelarTurnoJS(@Model.Cliente.turno)" type="button" class="btn bg-gradient-danger w-100 mt-4 mb-0" value="Cancelar">
+                                    </div>
+                                </li>
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!--   Core JS Files   -->
+
+<script src="~/js/dashboardjs/popper.min.js"></script>
+<script src="~/js/dashboardjs/bootstrap.min.js"></script>
+<script src="~/js/dashboardjs/plugins/perfect-scrollbar.min.js"></script>
+<script src="~/js/dashboardjs/plugins/smooth-scrollbar.min.js"></script>
+
+
+
+<script>
+
+    function CancelarTurnoJS(turno)
+    {
+
+        $.ajax({
+            type: "POST",
+            url: "/Caja/CancelarTurno",
+            data: {idturno : turno},
+            success: function(response){
+                AlertaTurnoCancelado(response);
+            },
+            error: function( request,status,error){
+                alert('error');
+            }
+        })
+    }
+
+
+    function AlertaTurnoCancelado(response)
+    {
+        let mensaje = "";
+
+        if (response == "True")
+        {
+            mensaje = "Turno cancelado";
+
+        }else if(response == "False"){
+            mensaje = "No se pudo cancelar el turno";
+
+        }
+
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 1000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+        })
+
+        Toast.fire({
+            icon: 'info',
+            title: mensaje
+        })
+
+
+        if (mensaje != 'No se pudo cancelar el turno')
+        setTimeout(() => { window.location.href = "@Url.Content("~/Caja/Vender")"; }, 2000);
+        
+    }
+
+
+</script>
+
+
+
+
+
+@if (TempData["mensaje"] != null)
+{
+
+    if (TempData["mensaje"].ToString() == "Mensaje 1")
+    {
+
+        <script>
+
+            Swal.fire(
+                {
+                    icon: 'success',
+                    text: 'El siguiente turno es: T-@Model.Cliente.turno',
+                    title: '<strong><u style="color: green; text-decoration: underline;">Facturacion exitosa</u></strong>',
+                    showConfirmButton: false,
+                    timer: 3000
+                })
+
+
+        </script>
+
+    }
+    else if (TempData["mensaje"].ToString() == "Mensaje 2")
+    {
+
+
+        <script>
+
+            Swal.fire(
+                {
+                    icon: 'error',
+                    text: 'Intentelo de nuevo o contacte a soporte tecnico',
+                    title: '<strong><u style="color: red; text-decoration: underline;">Ocurrio un error</u></strong>',
+                    showConfirmButton: false,
+                    timer: 3000
+                })
+
+
+        </script>
+    }
+    else if (TempData["mensaje"].ToString() == "Mensaje 3")
+    {
+
+
+        <script>
+
+            Swal.fire(
+                {
+                    icon: 'info',
+                    text: 'Actual mente no hay personas en turnos.',
+                    title: '<strong><u style="color: cyan; text-decoration: underline;">Ningun turno pendiente</u></strong>',
+                    showConfirmButton: false,
+                    timer: 3000
+                })
+
+
+
+
+
+        </script>
+    }
+
+
+}
